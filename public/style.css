@@ -1,0 +1,132 @@
+body {
+    margin: 0;
+    font-family: 'Google Sans', Roboto, Arial, sans-serif;
+    background-color: #F8F9FA; /* Very light gray, almost white */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #202124; /* Dark gray for general text */
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 720px; /* Slightly narrower for desktop */
+    height: 100vh; /* Full height on mobile */
+    max-height: 900px; /* Max height for desktop */
+    background-color: #FFFFFF; /* White background */
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px 0 rgba(0,0,0,0.06); /* More subtle shadow */
+    border-radius: 12px; /* More rounded corners */
+    overflow: hidden;
+}
+
+.messages-container {
+    flex-grow: 1;
+    padding: 20px 24px; /* Adjusted padding */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Slightly increased gap between messages */
+}
+
+.message {
+    padding: 12px 18px;
+    border-radius: 24px; /* More rounded message bubbles */
+    max-width: 75%; /* Slightly wider messages */
+    word-wrap: break-word;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.user-message {
+    align-self: flex-end;
+    background-color: #E8EAED; /* Slightly darker light gray for user messages */
+    color: #202124;
+    border-bottom-right-radius: 8px; /* Asymmetrical rounding */
+}
+
+.bot-message {
+    align-self: flex-start;
+    background-color: #E6F4EA; /* Very light green/cyan for bot messages */
+    color: #1A73E8; /* Google Blue for bot text */
+    border-bottom-left-radius: 8px; /* Asymmetrical rounding */
+}
+
+.bot-message.error {
+    background-color: #FCE8E6; /* Light red for error messages */
+    color: #D93025;
+}
+
+.input-area {
+    display: flex;
+    padding: 16px 24px;
+    border-top: 1px solid #DADCE0;
+    background-color: #fff;
+    align-items: center;
+}
+
+.input-area input {
+    flex-grow: 1;
+    border: 1px solid #DADCE0;
+    border-radius: 28px; /* Pill shape */
+    padding: 12px 20px;
+    font-size: 16px;
+    outline: none;
+    margin-right: 12px;
+    transition: border-color 0.3s ease;
+}
+
+.input-area input:focus {
+    border-color: #1A73E8; /* Google Blue on focus */
+}
+
+.input-area button {
+    background-color: #1A73E8; /* Google Blue */
+    color: #fff;
+    border: none;
+    border-radius: 28px; /* Pill shape */
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.input-area button:hover {
+    background-color: #174EA6; /* Darker Google Blue on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .chat-container {
+        border-radius: 0;
+        height: 100vh;
+        max-height: 100vh;
+    }
+
+    body {
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .messages-container {
+        padding: 15px;
+    }
+
+    .message {
+        max-width: 90%;
+        font-size: 14px;
+    }
+
+    .input-area {
+        padding: 10px 15px;
+    }
+
+    .input-area input,
+    .input-area button {
+        font-size: 14px;
+        padding: 10px 18px;
+    }
+}

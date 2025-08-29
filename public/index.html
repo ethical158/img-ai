@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini-like Image Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="messages-container" id="messages-container">
+            <div class="message bot-message">
+                <p>Hello! What image would you like to generate today?</p>
+            </div>
+        </div>
+        <form id="generate-form" class="input-area">
+            <input type="text" id="prompt" name="prompt" placeholder="Enter a prompt here" required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('generate-form');
+        const promptInput = document.getElementById('prompt');
+        const messagesContainer = document.getElementById('messages-container');
+
+        function addMessage(content, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', type);
+            if (typeof content === 'string') {
+                const p = document.createElement('p');
+                p.textContent = content;
+                messageDiv.appendChild(p);
+            } else {
+                messageDiv.appendChild(content);
+            }
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to bottom
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const prompt = promptInput.value.trim();
+            if (!prompt) return;
+
+            addMessage(prompt, 'user-message');
+            promptInput.value = '';
+
+            const loadingMessage = document.createElement('div');
+            loadingMessage.classList.add('message', 'bot-message');
+            loadingMessage.innerHTML = '<p>Generating image...</p>';
+            messagesContainer.appendChild(loadingMessage);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ prompt })
+                });
+
+                messagesContainer.removeChild(loadingMessage); // Remove loading message
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const imageUrl = URL.createObjectURL(blob);
+                    const imgElement = document.createElement('img');
+                    imgElement.src = imageUrl;
+                    imgElement.alt = 'Generated Image';
+                    imgElement.style.maxWidth = '100%';
+                    imgElement.style.height = 'auto';
+                    addMessage(imgElement, 'bot-message');
+                } else {
+                    const error = await response.text();
+                    addMessage(`Error: ${error}`, 'bot-message error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                messagesContainer.removeChild(loadingMessage); // Remove loading message
+                addMessage('An unexpected error occurred.', 'bot-message error');
+            }
+        });
+    </script>
+</body>
+</html>
